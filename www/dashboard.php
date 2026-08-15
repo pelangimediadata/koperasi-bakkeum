@@ -421,6 +421,33 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
         .modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 12px; width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .modal-header { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .close-modal { background: #6c757d; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; float: right; margin-top: 10px; font-weight: bold; }
+		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
+@media screen and (max-width: 768px) {
+    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
+    .sidebar, nav.sidebar {
+        width: 70px !important;
+        min-width: 70px !important;
+        overflow: hidden;
+    }
+
+    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
+    .sidebar span, .sidebar .menu-text {
+        display: none !important;
+    }
+
+    /* Konten utama mengambil sisa lebar layar penuh */
+    .main-content, .content, .container {
+        margin-left: 70px !important;
+        width: calc(100% - 70px) !important;
+        padding: 10px !important;
+    }
+
+    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
+    .card, .box {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+}
     </style>
 </head>
 <body>

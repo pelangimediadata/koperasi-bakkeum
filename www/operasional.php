@@ -220,6 +220,33 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             .print-signature { display: block !important; page-break-inside: avoid; }
             table { border-collapse: collapse !important; width: 100% !important; }
             table th, table td { border: 1px solid #000 !important; color: #000 !important; padding: 6px 8px !important; }
+			/* Pengaturan Responsif untuk Handphone / Layar Kecil */
+@media screen and (max-width: 768px) {
+    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
+    .sidebar, nav.sidebar {
+        width: 70px !important;
+        min-width: 70px !important;
+        overflow: hidden;
+    }
+
+    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
+    .sidebar span, .sidebar .menu-text {
+        display: none !important;
+    }
+
+    /* Konten utama mengambil sisa lebar layar penuh */
+    .main-content, .content, .container {
+        margin-left: 70px !important;
+        width: calc(100% - 70px) !important;
+        padding: 10px !important;
+    }
+
+    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
+    .card, .box {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+}
         }
     </style>
 </head>

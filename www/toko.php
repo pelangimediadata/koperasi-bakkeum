@@ -249,6 +249,33 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
         .modal-content { background-color: #fff; margin: 8% auto; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; }
         .modal-header { font-size: 16px; font-weight: bold; color: #044b3b; margin-bottom: 15px; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
+@media screen and (max-width: 768px) {
+    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
+    .sidebar, nav.sidebar {
+        width: 70px !important;
+        min-width: 70px !important;
+        overflow: hidden;
+    }
+
+    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
+    .sidebar span, .sidebar .menu-text {
+        display: none !important;
+    }
+
+    /* Konten utama mengambil sisa lebar layar penuh */
+    .main-content, .content, .container {
+        margin-left: 70px !important;
+        width: calc(100% - 70px) !important;
+        padding: 10px !important;
+    }
+
+    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
+    .card, .box {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+}
     </style>
 </head>
 <body>
