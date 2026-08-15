@@ -417,9 +417,17 @@ foreach ($rows_riwayat as $rw) {
     <?php include 'sidebar.php'; ?>
 
     <main class="main-content">
-        <h2>Laporan Utama Simpan Pinjam</h2>
-
-        <div class="content">
+			<div style="background: #203a43; padding: 25px; border-radius: 12px; color: #ffffff; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h1 style="font-size: 22px; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;">KOPERASI BAKKEUM</h1>
+                <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 15px;">Sistem Informasi Laporan Anggota Koperasi</p>
+                <div style="background: #0f2027; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); font-size: 14px; font-weight: 500;">
+                    <span>📅</span> <span><?php echo date('d M Y'); ?></span> 
+                    <span style="opacity: 0.4; margin: 0 4px;">|</span> 
+                    <span>⏰</span> <span id="live-clock"><?php echo date('H:i:s'); ?></span>
+                </div>
+            </div>
+			
+        <div class="top-section-header">
 			<div class="print-kop-surat">
 				<h1>KOPERASI BAKKEUM</h1>
 				<p>Laporan Resmi Keuangan dan Piutang</p>

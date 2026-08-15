@@ -3,8 +3,8 @@
 <!-- Tombol Header & Overlay Mobile (Diposisikan secara independen) -->
 <div id="mobileWrapperContainer">
     <div class="mobile-floating-header">
-        <div class="brand-mobile-text">🏢 KELOLA KOPERASI</div>
         <button type="button" class="btn-floating-toggle" onclick="toggleFullMenu()">☰ MENU</button>
+        <div class="brand-mobile-text">🏢 KELOLA KOPERASI</div>
     </div>
 
     <div class="mobile-menu-overlay" id="mobileMenuOverlay">

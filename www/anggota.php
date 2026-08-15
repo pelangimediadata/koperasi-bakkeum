@@ -216,7 +216,7 @@ $role_user = $_SESSION['role'] ?? 'admin';
         <div class="dashboard-header-flex">
             <div class="dashboard-title-box">
                 <h2>KOPERASI BAKKEUM</h2>
-                <p>Sistem Informasi Manajemen Pelanggan & Layanan Internet Desa</p>
+                <p>Sistem Informasi Manajemen Anggota Koperasi</p>
             </div>
             <div class="header-live-clock" id="liveClock">
                 📅 <span><?php echo date('d M Y'); ?></span> | ⏰ <span id="timeText">--:--:--</span>
