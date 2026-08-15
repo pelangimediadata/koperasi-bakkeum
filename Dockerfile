@@ -1,8 +1,8 @@
 FROM php:8.1-cli
 
-# Salin seluruh isi project ke /app di dalam container
-COPY . /app
+# Langsung salin isi folder www ke dalam root app
+COPY ./www /app
 WORKDIR /app
 
-# Jalankan server PHP dengan router yang mengarah ke folder www
-CMD php -S 0.0.0.0:${PORT:-8080} router.php
+# Jalankan server PHP langsung tanpa router tambahan
+CMD php -S 0.0.0.0:${PORT:-8080}
