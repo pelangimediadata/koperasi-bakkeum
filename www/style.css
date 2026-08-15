@@ -112,3 +112,32 @@ body {
     overflow-y: auto;
     background-color: #f4f6f9;
 }
+/* --- Pengaturan Responsif Khusus Handphone / Mobile --- */
+@media screen and (max-width: 768px) {
+    /* Lebar sidebar diperkecil secara drastis khusus untuk HP */
+    .sidebar {
+        width: 70px !important;
+        min-width: 70px !important;
+        padding: 15px 8px !important;
+    }
+
+    /* Sembunyikan teks menu, biarkan ikonnya saja */
+    .menu-list a span, 
+    .menu-list a .menu-text, 
+    .sidebar-brand span,
+    .sidebar .arrow {
+        display: none !important;
+    }
+
+    /* Sesuaikan padding menu agar pas di sidebar kecil */
+    .menu-list a, .dropdown-btn {
+        justify-content: center !important;
+        padding: 10px 5px !important;
+    }
+
+    /* Area konten utama menyesuaikan sisa lebar layar HP */
+    .main-content {
+        padding: 15px !important;
+        width: calc(100% - 70px) !important;
+    }
+}
