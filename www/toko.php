@@ -203,14 +203,15 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         .dashboard-header-flex {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 25px; background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px); padding: 15px 25px; border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            gap: 15px; flex-wrap: wrap;
         }
         .dashboard-title-box h2 { color: #ffffff; font-size: 22px; font-weight: 700; margin: 0; }
         .dashboard-title-box p { color: #b2dfdb; font-size: 12px; margin: 3px 0 0 0; }
@@ -218,6 +219,7 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
             background: rgba(0, 77, 64, 0.6); color: #e0f2f1; padding: 8px 16px;
             border-radius: 20px; font-size: 13px; font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; gap: 8px;
+            white-space: nowrap;
         }
         .main-card {
             background: rgba(255, 255, 255, 0.96); padding: 25px; border-radius: 16px;
@@ -228,54 +230,70 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .form-group label { font-size: 13px; font-weight: 600; color: #444; }
         .form-group input, .form-group select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; width: 100%; }
-        .btn { padding: 9px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn { padding: 9px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease; }
+        .btn:hover { filter: brightness(0.9); transform: translateY(-1px); }
         .btn-tambah { background: #007bff; color: white; padding: 10px 16px; font-size: 14px; }
         .btn-simpan { background: #28a745; color: white; padding: 10px 16px; font-size: 14px; }
         .btn-edit { background: #ffc107; color: #333; padding: 5px 10px; font-size: 12px; }
         .btn-hapus { background: #dc3545; color: white; padding: 5px 10px; font-size: 12px; }
         .btn-batal { background: #6c757d; color: white; }
 
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; margin-top: 10px; }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; margin-top: 10px; white-space: nowrap; }
         table th { background-color: #044b3b; color: white; padding: 12px 15px; font-weight: 600; }
-        table td { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; color: #333; }
+        table td { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; color: #333; vertical-align: middle; }
         tbody tr:hover { background-color: #f1f8f6; }
         .alert { padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; }
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .badge-anggota { background-color: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .badge-umum { background-color: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-anggota { background-color: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
+        .badge-umum { background-color: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; display: inline-block; }
 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
-        .modal-content { background-color: #fff; margin: 8% auto; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background-color: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .modal-header { font-size: 16px; font-weight: bold; color: #044b3b; margin-bottom: 15px; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
 
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
+        /* RESPONSIF KHUSUS MOBILE / LAYAR KECIL */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .app-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 15px 12px;
+            }
+            .main-card {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            .dashboard-header-flex {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+            .header-live-clock {
+                justify-content: center;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-tambah, .btn-simpan {
+                width: 100%;
+            }
+            .modal-buttons {
+                flex-direction: column;
+            }
+            .modal-buttons .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -384,11 +402,11 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
 
         <!-- 3. TABEL DAFTAR STOK BARANG -->
         <div class="main-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <div class="section-title" style="margin-bottom: 0;">📋 Daftar Stok Barang & Harga Toko</div>
                 <a href="cetak_laporan_stok.php" target="_blank" class="btn" style="background: #17a2b8; color: white; padding: 8px 14px; font-size: 13px;">🖨️ Cetak Laporan Stok</a>
             </div>
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -441,7 +459,7 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
                 <div class="section-title" style="margin-bottom: 0;">📜 Riwayat Transaksi Penjualan & Laporan Toko</div>
                 
                 <!-- Filter Status Pembayaran -->
-                <div style="display: flex; gap: 6px;">
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <?php $filter_status = $_GET['filter_status'] ?? 'semua'; ?>
                     <a href="toko.php?filter_status=semua" class="btn <?php echo ($filter_status === 'semua') ? '' : 'btn-batal'; ?>" style="font-size: 11px; padding: 6px 10px; background: <?php echo ($filter_status === 'semua') ? '#044b3b' : '#6c757d'; ?>; color: white;">Semua</a>
                     <a href="toko.php?filter_status=lunas" class="btn" style="font-size: 11px; padding: 6px 10px; background: <?php echo ($filter_status === 'lunas') ? '#28a745' : '#6c757d'; ?>; color: white;">Lunas</a>
@@ -482,7 +500,7 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
                 </div>
             </div>
 
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -551,7 +569,7 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
                                     <td style="text-align: center;"><?php echo $r['jumlah']; ?></td>
                                     <td style="text-align: right; font-weight: bold;">Rp <?php echo number_format($r['total_harga'], 0, ',', '.'); ?></td>
                                     <td style="text-align: center;">
-                                        <span style="background-color: <?php echo $badge_bg; ?>; color: <?php echo ($status_b === 'BAYAR SEBAGIAN') ? '#333' : '#fff'; ?>; padding: 3px 7px; border-radius: 4px; font-size: 10px; font-weight: bold;">
+                                        <span style="background-color: <?php echo $badge_bg; ?>; color: <?php echo ($status_b === 'BAYAR SEBAGIAN') ? '#333' : '#fff'; ?>; padding: 3px 7px; border-radius: 4px; font-size: 10px; font-weight: bold; display: inline-block;">
                                             <?php echo $status_b; ?>
                                         </span>
                                     </td>
@@ -646,7 +664,7 @@ $q_list_anggota = $koneksi->query("SELECT * FROM anggota ORDER BY nama ASC");
         document.getElementById('edit_harga_beli').value = hargaBeli;
         document.getElementById('edit_harga_jual').value = hargaJual;
         document.getElementById('edit_stok').value = stok;
-        document.getElementById('modalEdit').style.display = 'block';
+        document.getElementById('modalEdit').style.display = 'flex';
     }
 
     function closeEditModal() {

@@ -151,12 +151,14 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; width: 100%; }
+        
         .dashboard-header-flex {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 25px;
             border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap; gap: 15px;
         }
         .dashboard-title-box h2 { color: #ffffff; font-size: 22px; font-weight: 700; margin: 0; }
         .dashboard-title-box p { color: #b2dfdb; font-size: 12px; margin: 3px 0 0 0; }
@@ -182,34 +184,60 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 5px; transition: all 0.2s ease;
         }
         .btn:hover { transform: translateY(-1px); filter: brightness(0.95); }
-        .btn-simpan { background: #28a745; color: white; padding: 10px 16px; font-size: 14px; }
+        .btn-simpan { background: #28a745; color: white; padding: 10px 16px; font-size: 14px; width: 100%; }
         .btn-edit { background: #ffc107; color: #333; padding: 5px 10px; font-size: 12px; }
         .btn-hapus { background: #dc3545; color: white; padding: 5px 10px; font-size: 12px; }
         .btn-cetak { background: #17a2b8; color: white; padding: 10px 16px; font-size: 14px; }
         .btn-batal { background: #6c757d; color: white; }
         .btn-print-bukti { background: #6610f2; color: white; padding: 10px 16px; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; margin-top: 10px; }
+        
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 700px; }
         table th { background-color: #044b3b; color: white; padding: 10px 12px; font-weight: 600; border: 1px solid #03362a; }
         table td { padding: 10px 12px; border-bottom: 1px solid #e0e0e0; color: #333; border-right: 1px solid #e0e0e0; border-left: 1px solid #e0e0e0; }
         tbody tr:hover { background-color: #f1f8f6; }
+        
         .alert { padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; }
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .badge-masuk { background-color: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         .badge-keluar { background-color: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
-        .modal-content { background-color: #fff; margin: 6% auto; padding: 25px; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); padding: 15px; overflow-y: auto;}
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 12px; width: 100%; max-width: 480px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .modal-header { font-size: 16px; font-weight: bold; color: #044b3b; margin-bottom: 15px; }
-        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        
         .kop-surat { display: none; text-align: center; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 20px; }
         .kop-surat h2 { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #000; }
         .kop-surat p { font-size: 12px; color: #333; }
+        
         .modal-bukti-overlay {
             display: <?php echo ($last_inserted_id > 0) ? 'flex' : 'none'; ?>;
             position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center;
+            background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 15px;
         }
-        .modal-bukti-box { background: white; padding: 30px; border-radius: 10px; width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+        .modal-bukti-box { background: white; padding: 25px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+
+        /* Responsif Media Queries untuk HP / Tablet Kecil */
+        @media (max-width: 768px) {
+            body { display: block; }
+            .app-container { flex-direction: column; }
+            .main-content { padding: 15px 10px; }
+            .dashboard-header-flex { padding: 12px 15px; flex-direction: column; align-items: flex-start; }
+            .header-live-clock { width: 100%; justify-content: center; }
+            .main-card { padding: 15px; border-radius: 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .form-group[style*="grid-column"] { grid-column: span 1 !important; }
+            .modal-content { margin: 15% auto; padding: 15px; }
+            .modal-bukti-box { padding: 20px; }
+        }
+
         @media print {
             body { background: white !important; color: black !important; display: block !important; height: auto !important; }
             .app-container { display: block !important; }
@@ -218,35 +246,8 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             #laporanResmiCard { background: white !important; box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; display: block !important; }
             .kop-surat { display: block !important; }
             .print-signature { display: block !important; page-break-inside: avoid; }
-            table { border-collapse: collapse !important; width: 100% !important; }
+            table { border-collapse: collapse !important; width: 100% !important; min-width: auto !important; }
             table th, table td { border: 1px solid #000 !important; color: #000 !important; padding: 6px 8px !important; }
-			/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
-
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
         }
     </style>
 </head>
@@ -269,7 +270,7 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             <div><b>Jumlah:</b> Rp <?php echo number_format($d_last['jumlah'], 0, ',', '.'); ?></div>
             <div><b>Uraian:</b> <?php echo htmlspecialchars($d_last['keterangan']); ?></div>
         </div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
             <button type="button" class="btn btn-batal" onclick="document.getElementById('modalBuktiPopup').style.display='none'">Tutup</button>
             <button type="button" class="btn btn-print-bukti" onclick="printBuktiTrans('<?php echo $last_inserted_id; ?>')">🖨️ Cetak Bukti Transaksi</button>
         </div>
@@ -350,10 +351,10 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
         <div class="main-card print-hide">
             <div class="section-title">📋 Riwayat & Data Input Operasional</div>
             
-            <form method="GET" action="" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px; flex-wrap: wrap;">
-                <div class="form-group" style="margin-bottom:0; min-width: 140px;">
+            <form method="GET" action="" style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 15px; flex-wrap: wrap;">
+                <div class="form-group" style="margin-bottom:0; flex: 1; min-width: 130px;">
                     <label style="font-size:11px;">Bulan:</label>
-                    <select name="bulan">
+                    <select name="bulan" style="width: 100%;">
                         <?php 
                         foreach($nama_bln as $num => $nm) {
                             $sel = ($num == $filter_bulan) ? 'selected' : '';
@@ -362,13 +363,13 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
                         ?>
                     </select>
                 </div>
-                <div class="form-group" style="margin-bottom:0; min-width: 100px;">
+                <div class="form-group" style="margin-bottom:0; flex: 1; min-width: 90px;">
                     <label style="font-size:11px;">Tahun:</label>
-                    <input type="number" name="tahun" value="<?php echo htmlspecialchars($filter_tahun); ?>" style="padding: 8px;">
+                    <input type="number" name="tahun" value="<?php echo htmlspecialchars($filter_tahun); ?>" style="padding: 8px; width: 100%;">
                 </div>
-                <div class="form-group" style="margin-bottom:0; min-width: 200px;">
+                <div class="form-group" style="margin-bottom:0; flex: 2; min-width: 180px;">
                     <label style="font-size:11px;">Kategori:</label>
-                    <select name="kategori_filter">
+                    <select name="kategori_filter" style="width: 100%;">
                         <option value="">-- Semua Kategori --</option>
                         <option value="Pemasukan Operasional" <?php if($filter_kategori=='Pemasukan Operasional') echo 'selected'; ?>>Pemasukan Operasional</option>
                         <option value="Belanja Modal" <?php if($filter_kategori=='Belanja Modal') echo 'selected'; ?>>Belanja Modal</option>
@@ -376,12 +377,12 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
                         <option value="Belanja Barang dan Jasa" <?php if($filter_kategori=='Belanja Barang dan Jasa') echo 'selected'; ?>>Belanja Barang dan Jasa</option>
                     </select>
                 </div>
-                <div style="margin-top: 18px;">
-                    <button type="submit" class="btn" style="background: #007bff; color:white; padding: 9px 14px;">🔍 Filter</button>
+                <div>
+                    <button type="submit" class="btn" style="background: #007bff; color:white; padding: 9px 14px; height: 40px;">🔍 Filter</button>
                 </div>
             </form>
 
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -463,9 +464,9 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
 
             <!-- Bagian Filter Periode dan Tombol Cetak -->
             <div class="print-hide" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #ffffff; padding: 15px 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px;">
-                <form method="GET" action="operasional.php" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <label style="font-weight: 600; font-size: 13px; color: #333;">Filter Periode:</label>
-                    <select name="bulan" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px;">
+                <form method="GET" action="operasional.php" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; width: 100%;">
+                    <label style="font-weight: 600; font-size: 13px; color: #333; width: 100%;">Filter Periode:</label>
+                    <select name="bulan" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; flex: 1; min-width: 120px;">
                         <?php
                         foreach ($nama_bln as $key => $nama_bln_item) {
                             $sel = ($filter_bulan == sprintf('%02d', $key)) ? 'selected' : '';
@@ -473,7 +474,7 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
                         }
                         ?>
                     </select>
-                    <select name="tahun" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px;">
+                    <select name="tahun" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px; flex: 1; min-width: 90px;">
                         <?php
                         for ($t = date('Y'); $t >= date('Y') - 5; $t--) {
                             $sel = ($filter_tahun == $t) ? 'selected' : '';
@@ -485,11 +486,11 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
                     <button type="submit" class="btn" style="background: #007bff; color: white; padding: 8px 15px; font-size: 13px;">Tampilkan</button>
                 </form>
 
-                <div>
-					<button type="button" onclick="cetakLaporanResmi()" class="btn btn-cetak" style="padding: 8px 15px; font-size: 13px; border-radius: 6px;">
+                <div style="width: 100%;">
+					<button type="button" onclick="cetakLaporanResmi()" class="btn btn-cetak" style="padding: 8px 15px; font-size: 13px; border-radius: 6px; width: 100%;">
 						🖨️ Cetak Laporan Resmi
 					</button>
-				</div>>
+				</div>
             </div>
 
             <div class="section-title print-hide" style="display: flex; justify-content: space-between; align-items: center;">
@@ -538,7 +539,7 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
                 </div>
             </div>
 
-            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #cbd5e1; margin-bottom: 25px;">
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #cbd5e1; margin-bottom: 25px; flex-wrap: wrap; gap: 10px;">
                 <div>
                     <strong style="color: #334155;">Sisa Saldo Netto Operasional (Pemasukan - Total Pengeluaran):</strong>
                 </div>
@@ -550,80 +551,82 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
             <!-- TABEL RINCIAN BUKU KAS -->
             <div style="margin-top: 20px;">
                 <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px; color: #044b3b; text-transform: uppercase;">Buku Kas Transaksi Operasional</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 35px; text-align: center;">No</th>
-                            <th style="width: 90px;">Tanggal</th>
-                            <th>Uraian / Keterangan</th>
-                            <th style="width: 100px;">No. Bukti</th>
-                            <th style="text-align: right; width: 110px;">Masuk (Rp)</th>
-                            <th style="text-align: right; width: 110px;">Keluar (Rp)</th>
-                            <th style="text-align: right; width: 120px;">Saldo (Rp)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $stmt_buku = $koneksi->prepare("SELECT * FROM operasional $where_clause ORDER BY tanggal ASC, id_operasional ASC");
-                        $stmt_buku->execute($params_filter);
-                        $rows_buku = $stmt_buku->fetchAll(PDO::FETCH_ASSOC);
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 35px; text-align: center;">No</th>
+                                <th style="width: 90px;">Tanggal</th>
+                                <th>Uraian / Keterangan</th>
+                                <th style="width: 100px;">No. Bukti</th>
+                                <th style="text-align: right; width: 110px;">Masuk (Rp)</th>
+                                <th style="text-align: right; width: 110px;">Keluar (Rp)</th>
+                                <th style="text-align: right; width: 120px;">Saldo (Rp)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmt_buku = $koneksi->prepare("SELECT * FROM operasional $where_clause ORDER BY tanggal ASC, id_operasional ASC");
+                            $stmt_buku->execute($params_filter);
+                            $rows_buku = $stmt_buku->fetchAll(PDO::FETCH_ASSOC);
 
-                        $no_bk = 1;
-                        $running_saldo = 0;
-                        $sum_total_masuk = 0;
-                        $sum_total_keluar = 0;
+                            $no_bk = 1;
+                            $running_saldo = 0;
+                            $sum_total_masuk = 0;
+                            $sum_total_keluar = 0;
 
-                        if (count($rows_buku) > 0) {
-                            foreach ($rows_buku as $rb) {
-                                $is_m = ($rb['jenis_transaksi'] === 'Masuk');
-                                $val_masuk = $is_m ? (float)$rb['jumlah'] : 0;
-                                $val_keluar = !$is_m ? (float)$rb['jumlah'] : 0;
-                                
-                                if ($is_m) {
-                                    $running_saldo += $val_masuk;
-                                    $sum_total_masuk += $val_masuk;
-                                } else {
-                                    $running_saldo -= $val_keluar;
-                                    $sum_total_keluar += $val_keluar;
+                            if (count($rows_buku) > 0) {
+                                foreach ($rows_buku as $rb) {
+                                    $is_m = ($rb['jenis_transaksi'] === 'Masuk');
+                                    $val_masuk = $is_m ? (float)$rb['jumlah'] : 0;
+                                    $val_keluar = !$is_m ? (float)$rb['jumlah'] : 0;
+                                    
+                                    if ($is_m) {
+                                        $running_saldo += $val_masuk;
+                                        $sum_total_masuk += $val_masuk;
+                                    } else {
+                                        $running_saldo -= $val_keluar;
+                                        $sum_total_keluar += $val_keluar;
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td style="text-align: center;"><?php echo $no_bk++; ?></td>
+                                        <td><?php echo date('d-m-Y', strtotime($rb['tanggal'])); ?></td>
+                                        <td>
+                                            <b><?php echo htmlspecialchars($rb['kategori']); ?></b><br>
+                                            <span style="font-size: 11px; color: #555;"><?php echo htmlspecialchars($rb['keterangan']); ?></span>
+                                            <?php if(!empty($rb['penerima_penyetor'])): ?>
+                                                <br><span style="font-size: 10px; color: #777;">Pihak: <?php echo htmlspecialchars($rb['penerima_penyetor']); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($rb['nomor_bukti'] ?: '-'); ?></td>
+                                        <td style="text-align: right; color: #16a34a; font-weight: 500;">
+                                            <?php echo $val_masuk > 0 ? number_format($val_masuk, 0, ',', '.') : '-'; ?>
+                                        </td>
+                                        <td style="text-align: right; color: #dc2626; font-weight: 500;">
+                                            <?php echo $val_keluar > 0 ? number_format($val_keluar, 0, ',', '.') : '-'; ?>
+                                        </td>
+                                        <td style="text-align: right; font-weight: bold; color: #0f766e;">
+                                            <?php echo number_format($running_saldo, 0, ',', '.'); ?>
+                                        </td>
+                                    </tr>
+                                    <?php
                                 }
                                 ?>
-                                <tr>
-                                    <td style="text-align: center;"><?php echo $no_bk++; ?></td>
-                                    <td><?php echo date('d-m-Y', strtotime($rb['tanggal'])); ?></td>
-                                    <td>
-                                        <b><?php echo htmlspecialchars($rb['kategori']); ?></b><br>
-                                        <span style="font-size: 11px; color: #555;"><?php echo htmlspecialchars($rb['keterangan']); ?></span>
-                                        <?php if(!empty($rb['penerima_penyetor'])): ?>
-                                            <br><span style="font-size: 10px; color: #777;">Pihak: <?php echo htmlspecialchars($rb['penerima_penyetor']); ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($rb['nomor_bukti'] ?: '-'); ?></td>
-                                    <td style="text-align: right; color: #16a34a; font-weight: 500;">
-                                        <?php echo $val_masuk > 0 ? number_format($val_masuk, 0, ',', '.') : '-'; ?>
-                                    </td>
-                                    <td style="text-align: right; color: #dc2626; font-weight: 500;">
-                                        <?php echo $val_keluar > 0 ? number_format($val_keluar, 0, ',', '.') : '-'; ?>
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold; color: #0f766e;">
-                                        <?php echo number_format($running_saldo, 0, ',', '.'); ?>
-                                    </td>
+                                <tr style="background-color: #f8fafc; font-weight: bold;">
+                                    <td colspan="4" style="text-align: right; border-top: 2px solid #000;">TOTAL BULAN INI:</td>
+                                    <td style="text-align: right; color: #16a34a; border-top: 2px solid #000;">Rp <?php echo number_format($sum_total_masuk, 0, ',', '.'); ?></td>
+                                    <td style="text-align: right; color: #dc2626; border-top: 2px solid #000;">Rp <?php echo number_format($sum_total_keluar, 0, ',', '.'); ?></td>
+                                    <td style="text-align: right; color: #0f766e; border-top: 2px solid #000;">Rp <?php echo number_format($running_saldo, 0, ',', '.'); ?></td>
                                 </tr>
                                 <?php
+                            } else {
+                                echo "<tr><td colspan='7' style='text-align:center; padding: 15px;'>Tidak ada transaksi buku kas pada periode ini.</td></tr>";
                             }
                             ?>
-                            <tr style="background-color: #f8fafc; font-weight: bold;">
-                                <td colspan="4" style="text-align: right; border-top: 2px solid #000;">TOTAL BULAN INI:</td>
-                                <td style="text-align: right; color: #16a34a; border-top: 2px solid #000;">Rp <?php echo number_format($sum_total_masuk, 0, ',', '.'); ?></td>
-                                <td style="text-align: right; color: #dc2626; border-top: 2px solid #000;">Rp <?php echo number_format($sum_total_keluar, 0, ',', '.'); ?></td>
-                                <td style="text-align: right; color: #0f766e; border-top: 2px solid #000;">Rp <?php echo number_format($running_saldo, 0, ',', '.'); ?></td>
-                            </tr>
-                            <?php
-                        } else {
-                            echo "<tr><td colspan='7' style='text-align:center; padding: 15px;'>Tidak ada transaksi buku kas pada periode ini.</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Tanda Tangan Pengurus (Muncul saat dicetak) -->
@@ -686,7 +689,7 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
 
                     <div class="modal-buttons">
                         <button type="button" class="btn btn-batal" onclick="closeEditModal()">Batal</button>
-                        <button type="submit" name="edit_operasional" class="btn btn-simpan">Simpan Perubahan</button>
+                        <button type="submit" name="edit_operasional" class="btn btn-simpan" style="width: auto;">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
@@ -792,13 +795,13 @@ $nama_bln = [1=>'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustu
         }
     }
 	function cetakLaporanResmi() {
-    const bulan = document.querySelector('select[name="bulan"]').value;
-    const tahun = document.querySelector('select[name="tahun"]').value;
-    const kategori = document.querySelector('input[name="kategori_filter"]')?.value || '';
-    
-    const win = window.open(`cetak_laporan_operasional.php?bulan=${bulan}&tahun=${tahun}&kategori_filter=${kategori}`, '_blank', 'width=900,height=700');
-    if (win) win.focus();
-}
+        const bulan = document.querySelector('select[name="bulan"]').value;
+        const tahun = document.querySelector('select[name="tahun"]').value;
+        const kategori = document.querySelector('input[name="kategori_filter"]')?.value || '';
+        
+        const win = window.open(`cetak_laporan_operasional.php?bulan=${bulan}&tahun=${tahun}&kategori_filter=${kategori}`, '_blank', 'width=900,height=700');
+        if (win) win.focus();
+    }
 </script>
 
 </body>

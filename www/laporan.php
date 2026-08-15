@@ -145,7 +145,7 @@ $stmt_riwayat = $koneksi->prepare("
 ");
 $stmt_riwayat->execute($params_riwayat);
 $rows_riwayat = $stmt_riwayat->fetchAll(PDO::FETCH_ASSOC);
-// Hitung total keseluruhan untuk riwayat pembayaran
+
 $total_nominal_bayar = 0;
 $total_bayar_bunga = 0;
 foreach ($rows_riwayat as $rw) {
@@ -177,7 +177,7 @@ foreach ($rows_riwayat as $rw) {
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; overflow-x: hidden; }
         
         .sidebar {
             width: 70px;
@@ -200,7 +200,7 @@ foreach ($rows_riwayat as $rw) {
         .sidebar .arrow { opacity: 0; transition: opacity 0.2s ease; }
         .sidebar:hover .arrow { opacity: 1; }
 
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; }
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; width: calc(100% - 70px); }
 
         h2 { color: #ffffff; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 24px; }
 
@@ -209,12 +209,13 @@ foreach ($rows_riwayat as $rw) {
             padding: 30px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
         }
 
         .alert-success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #c3e6cb; }
         .alert-error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f5c6cb; }
 
-        .action-bar { margin-bottom: 25px; display: flex; gap: 10px; }
+        .action-bar { margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap; }
         
         .btn {
             padding: 10px 18px;
@@ -251,7 +252,7 @@ foreach ($rows_riwayat as $rw) {
         }
         .filter-box select {
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
             padding: 10px 14px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
@@ -275,12 +276,21 @@ foreach ($rows_riwayat as $rw) {
         .card h4 { font-size: 13px; color: #64748b; margin-bottom: 8px; font-weight: 600; }
         .card .value { font-size: 18px; font-weight: bold; }
 
+        /* Responsive Table Wrapper */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            margin-bottom: 30px;
             font-size: 14px;
+            white-space: nowrap;
         }
         th, td {
             padding: 12px 15px;
@@ -340,6 +350,35 @@ foreach ($rows_riwayat as $rw) {
         .opt-semua { background: #dcfce7; color: #15803d; }
         .close-btn { background: #e2e8f0; color: #475569; }
 
+        /* Media Queries untuk Mobile */
+        @media (max-width: 768px) {
+            body { display: block; }
+            .app-container { flex-direction: column; }
+            .sidebar {
+                width: 100% !important;
+                height: 60px;
+                flex-direction: row;
+                align-items: center;
+                padding: 0 15px;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                z-index: 1000;
+                border-right: none;
+                border-top: 1px solid rgba(255,255,255,0.2);
+            }
+            .sidebar:hover { width: 100% !important; }
+            .sidebar .menu-text { opacity: 1; visibility: visible; }
+            .main-content {
+                width: 100% !important;
+                padding: 15px;
+                padding-bottom: 80px; /* Space for bottom navbar */
+            }
+            .content { padding: 15px; }
+            .filter-box { flex-direction: column; align-items: stretch; }
+            .filter-box select, .filter-box button, .filter-box a { width: 100%; }
+        }
+
 		@media print {
 			@page { size: A4; margin: 20mm; }
 			body { background: white !important; color: #000 !important; font-family: 'Times New Roman', Times, serif !important; font-size: 12pt; }
@@ -356,6 +395,7 @@ foreach ($rows_riwayat as $rw) {
 
 			.print-meta { display: flex !important; justify-content: space-between; font-size: 10pt; margin-bottom: 15px; font-style: italic; }
 
+            .table-responsive { overflow: visible !important; border: none !important; }
 			table { width: 100% !important; border-collapse: collapse !important; margin-top: 10px !important; margin-bottom: 20px !important; font-size: 10pt !important; }
 			th, td { border: 1px solid #333 !important; padding: 6px 8px !important; color: #000 !important; }
 			th { background-color: #e2e8f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-align: center; }
@@ -369,33 +409,6 @@ foreach ($rows_riwayat as $rw) {
 		}
 
 		.print-kop-surat, .print-meta, .print-tanda-tangan { display: none; }
-		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
-
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
     </style>
 </head>
 <body>
@@ -475,92 +488,93 @@ foreach ($rows_riwayat as $rw) {
             </div>
 
             <h3 class="section-title">📊 Rekapitulasi Status Pinjaman & Piutang</h3>
-            <table>
-                <thead>
+            <div class="table-responsive">
+                <table>
                     <thead>
-						<tr>
-							<th>No Pinjaman</th>
-							<th>Nama Anggota</th>
-							<th class="text-center">Jangka Waktu</th>
-							<th class="text-right">Jumlah Pinjaman</th>
-							<th class="text-right">Total Bunga</th>
-							<th class="text-right">Sisa Pokok (Piutang)</th>
-							<th class="text-right">Sisa Bunga Belum Dibayar</th>
-							<th class="text-right">Bunga Sisa Pokok Dibayar</th>
-							<th class="text-center">Status</th>
-						</tr>
-					</thead>
-                </thead>
-                <tbody>
-                    <?php 
-                    if (!empty($data_laporan)) {
-                        foreach ($data_laporan as $row) {
-                            $badge_class = 'badge-berjalan';
-                            if ($row['status'] == 'Lunas') $badge_class = 'badge-lunas';
-                            if ($row['status'] == 'Macet') $badge_class = 'badge-macet';
-                    ?>
-                    <tr>
-						<td class="text-center">PJ-<?php echo sprintf('%03d', $row['no_pinjaman']); ?></td>
-						<td><?php echo htmlspecialchars($row['nama_anggota']); ?></td>
-						<td class="text-center"><?php echo $row['tenor_calc']; ?> Bulan</td>
-						<td class="text-right">Rp <?php echo number_format($row['jumlah_pinjaman'], 0, ',', '.'); ?></td>
-						<td class="text-right">Rp <?php echo number_format($row['total_bunga_calc'], 0, ',', '.'); ?> (<?php echo $row['bunga']; ?>%)</td>
-						<td class="text-right text-danger">Rp <?php echo number_format($row['sisa_pokok_calc'], 0, ',', '.'); ?></td>
-						<td class="text-right text-danger">Rp <?php echo number_format($row['sisa_bunga_calc'], 0, ',', '.'); ?></td>
-						<td class="text-right text-success">Rp <?php echo number_format($row['total_bunga_sisa_pokok'], 0, ',', '.'); ?></td>
-						<td class="text-center"><span class="badge <?php echo $badge_class; ?>"><?php echo $row['status']; ?></span></td>
-					</tr>>
-                    <?php 
+                        <tr>
+                            <th>No Pinjaman</th>
+                            <th>Nama Anggota</th>
+                            <th class="text-center">Jangka Waktu</th>
+                            <th class="text-right">Jumlah Pinjaman</th>
+                            <th class="text-right">Total Bunga</th>
+                            <th class="text-right">Sisa Pokok (Piutang)</th>
+                            <th class="text-right">Sisa Bunga Belum Dibayar</th>
+                            <th class="text-right">Bunga Sisa Pokok Dibayar</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if (!empty($data_laporan)) {
+                            foreach ($data_laporan as $row) {
+                                $badge_class = 'badge-berjalan';
+                                if ($row['status'] == 'Lunas') $badge_class = 'badge-lunas';
+                                if ($row['status'] == 'Macet') $badge_class = 'badge-macet';
+                        ?>
+                        <tr>
+                            <td class="text-center">PJ-<?php echo sprintf('%03d', $row['no_pinjaman']); ?></td>
+                            <td><?php echo htmlspecialchars($row['nama_anggota']); ?></td>
+                            <td class="text-center"><?php echo $row['tenor_calc']; ?> Bulan</td>
+                            <td class="text-right">Rp <?php echo number_format($row['jumlah_pinjaman'], 0, ',', '.'); ?></td>
+                            <td class="text-right">Rp <?php echo number_format($row['total_bunga_calc'], 0, ',', '.'); ?> (<?php echo $row['bunga']; ?>%)</td>
+                            <td class="text-right text-danger">Rp <?php echo number_format($row['sisa_pokok_calc'], 0, ',', '.'); ?></td>
+                            <td class="text-right text-danger">Rp <?php echo number_format($row['sisa_bunga_calc'], 0, ',', '.'); ?></td>
+                            <td class="text-right text-success">Rp <?php echo number_format($row['total_bunga_sisa_pokok'], 0, ',', '.'); ?></td>
+                            <td class="text-center"><span class="badge <?php echo $badge_class; ?>"><?php echo $row['status']; ?></span></td>
+                        </tr>
+                        <?php 
+                            }
+                        } else {
+                            echo "<tr><td colspan='9' class='text-center'>Data tidak ditemukan</td></tr>";
                         }
-                    } else {
-                        echo "<tr><td colspan='8' class='text-center'>Data tidak ditemukan</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
             <h3 class="section-title">💳 Riwayat Pembayaran Angsuran & Bunga</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="text-center">Tgl Bayar</th>
-                        <th class="text-center">No Pinjaman</th>
-                        <th>Nama Anggota</th>
-                        <th class="text-center">Jenis Bayar</th>
-                        <th class="text-right">Nominal Bayar</th>
-                        <th class="text-right">Bayar Bunga</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    if (count($rows_riwayat) > 0) {
-                        foreach ($rows_riwayat as $rw) {
-                            $jenis = $rw['jenis_bayar'] ?? 'Bayar Angsuran';
-                    ?>
-                    <tr>
-                        <td class="text-center"><?php echo date('d/m/Y', strtotime($rw['tanggal'])); ?></td>
-                        <td class="text-center">PJ-<?php echo sprintf('%03d', $rw['no_pinjaman']); ?></td>
-                        <td><?php echo htmlspecialchars($rw['nama_anggota']); ?></td>
-                        <td class="text-center"><strong><?php echo htmlspecialchars($jenis); ?></strong></td>
-                        <td class="text-right text-success">Rp <?php echo number_format($rw['jumlah_bayar'] ?? 0, 0, ',', '.'); ?></td>
-                        <td class="text-right text-success">Rp <?php echo number_format($rw['bayar_bunga'] ?? 0, 0, ',', '.'); ?></td>
-                    </tr>
-                    <?php 
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-center">Tgl Bayar</th>
+                            <th class="text-center">No Pinjaman</th>
+                            <th>Nama Anggota</th>
+                            <th class="text-center">Jenis Bayar</th>
+                            <th class="text-right">Nominal Bayar</th>
+                            <th class="text-right">Bayar Bunga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if (count($rows_riwayat) > 0) {
+                            foreach ($rows_riwayat as $rw) {
+                                $jenis = $rw['jenis_bayar'] ?? 'Bayar Angsuran';
+                        ?>
+                        <tr>
+                            <td class="text-center"><?php echo date('d/m/Y', strtotime($rw['tanggal'])); ?></td>
+                            <td class="text-center">PJ-<?php echo sprintf('%03d', $rw['no_pinjaman']); ?></td>
+                            <td><?php echo htmlspecialchars($rw['nama_anggota']); ?></td>
+                            <td class="text-center"><strong><?php echo htmlspecialchars($jenis); ?></strong></td>
+                            <td class="text-right text-success">Rp <?php echo number_format($rw['jumlah_bayar'] ?? 0, 0, ',', '.'); ?></td>
+                            <td class="text-right text-success">Rp <?php echo number_format($rw['bayar_bunga'] ?? 0, 0, ',', '.'); ?></td>
+                        </tr>
+                        <?php 
+                            }
+                        ?>
+                        <tr style="background-color: #f1f5f9; font-weight: bold;">
+                            <td colspan="4" class="text-right">TOTAL KESELURUHAN:</td>
+                            <td class="text-right text-success">Rp <?php echo number_format($total_nominal_bayar, 0, ',', '.'); ?></td>
+                            <td class="text-right text-success">Rp <?php echo number_format($total_bayar_bunga, 0, ',', '.'); ?></td>
+                        </tr>
+                        <?php
+                        } else {
+                            echo "<tr><td colspan='6' class='text-center'>Belum ada transaksi pembayaran</td></tr>";
                         }
-                        // Baris Keterangan Total di Bawah
-                    ?>
-                    <tr style="background-color: #f1f5f9; font-weight: bold;">
-                        <td colspan="4" class="text-right">TOTAL KESELURUHAN:</td>
-                        <td class="text-right text-success">Rp <?php echo number_format($total_nominal_bayar, 0, ',', '.'); ?></td>
-                        <td class="text-right text-success">Rp <?php echo number_format($total_bayar_bunga, 0, ',', '.'); ?></td>
-                    </tr>
-                    <?php
-                    } else {
-                        echo "<tr><td colspan='6' class='text-center'>Belum ada transaksi pembayaran</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div id="saveModal" class="modal">

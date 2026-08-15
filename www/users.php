@@ -128,8 +128,8 @@ $list_users = $koneksi->query("SELECT * FROM users ORDER BY id ASC");
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         h2 { color: #ffffff; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); font-size: 24px; }
 
@@ -173,15 +173,22 @@ $list_users = $koneksi->query("SELECT * FROM users ORDER BY id ASC");
             align-items: center;
             gap: 6px;
             text-decoration: none;
+            justify-content: center;
         }
-        .btn-primary { background: #00796b; color: white; justify-content: center; }
+        .btn-primary { background: #00796b; color: white; }
         .btn-primary:hover { background: #004d40; }
-        .btn-secondary { background: #64748b; color: white; justify-content: center; }
+        .btn-secondary { background: #64748b; color: white; }
         .btn-secondary:hover { background: #475569; }
-        .btn-edit { background: #0288d1; color: white; padding: 5px 10px; font-size: 12px; }
+        .btn-edit { background: #0288d1; color: white; padding: 6px 12px; font-size: 12px; }
         .btn-edit:hover { background: #01579b; }
-        .btn-hapus { background: #dc2626; color: white; padding: 5px 10px; font-size: 12px; }
+        .btn-hapus { background: #dc2626; color: white; padding: 6px 12px; font-size: 12px; }
         .btn-hapus:hover { background: #b91c1c; }
+
+        /* Responsive Table & Card Wrapper */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
 
         table {
             width: 100%;
@@ -189,6 +196,7 @@ $list_users = $koneksi->query("SELECT * FROM users ORDER BY id ASC");
             margin-top: 15px;
             margin-bottom: 20px;
             font-size: 14px;
+            min-width: 600px;
         }
         th, td {
             padding: 12px 15px;
@@ -198,7 +206,75 @@ $list_users = $koneksi->query("SELECT * FROM users ORDER BY id ASC");
         th { background-color: #f1f5f9; color: #1e293b; font-weight: 700; }
         tr:hover { background-color: #f8fafc; }
         .text-center { text-align: center; }
-        .badge-role { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge-role { background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
+
+        /* Media Queries untuk Mobile */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .app-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .content {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            h2 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            /* Ubah tampilan tabel menjadi card list agar sangat rapi di HP */
+            .desktop-table {
+                display: none;
+            }
+            .mobile-cards {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-top: 15px;
+            }
+            .user-card-item {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .user-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #e2e8f0;
+                padding-bottom: 8px;
+            }
+            .user-card-body {
+                font-size: 14px;
+                color: #334155;
+            }
+            .user-card-footer {
+                display: flex;
+                gap: 8px;
+                margin-top: 5px;
+            }
+            .user-card-footer .btn {
+                flex: 1;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-cards {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -254,45 +330,82 @@ $list_users = $koneksi->query("SELECT * FROM users ORDER BY id ASC");
 
             <h3 style="color: #1e293b; margin-bottom: 10px; font-size: 18px;">Manajemen Akun Pengguna Terdaftar</h3>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 50px;" class="text-center">NO</th>
-                        <th>USERNAME</th>
-                        <th>NAMA LENGKAP</th>
-                        <th class="text-center">ROLE</th>
-                        <th style="width: 150px;" class="text-center">AKSI</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $rows_users = $list_users->fetchAll(PDO::FETCH_ASSOC);
-                    if (count($rows_users) > 0):
-                        $no = 1;
-                        foreach ($rows_users as $row):
-                            $nama_tampil = $row['nama_lengkap'] ?? $row['nama'] ?? '-';
-                            $role_tampil = $row['role'] ?? 'ADMIN';
-                    ?>
-                    <tr>
-                        <td class="text-center"><?php echo $no++; ?></td>
-                        <td><strong><?php echo htmlspecialchars($row['username'] ?? ''); ?></strong></td>
-                        <td><?php echo htmlspecialchars($nama_tampil); ?></td>
-                        <td class="text-center"><span class="badge-role"><?php echo htmlspecialchars(strtoupper($role_tampil)); ?></span></td>
-                        <td class="text-center">
-                            <a href="users.php?edit=<?php echo $row['id']; ?>" class="btn btn-edit">✏️ Edit</a>
-                            <a href="users.php?hapus=<?php echo $row['id']; ?>" class="btn btn-hapus" onclick="return confirm('Yakin ingin menghapus user ini?');">🗑️ Hapus</a>
-                        </td>
-                    </tr>
-                    <?php 
-                        endforeach;
-                    else:
-                    ?>
-                    <tr>
-                        <td colspan="5" class="text-center" style="padding: 20px; color: #64748b;">Belum ada data user.</td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+            <?php 
+            $rows_users = $list_users->fetchAll(PDO::FETCH_ASSOC);
+            ?>
+
+            <!-- Tampilan Desktop (Tabel Biasa dengan Scroll Responsif) -->
+            <div class="table-responsive desktop-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;" class="text-center">NO</th>
+                            <th>USERNAME</th>
+                            <th>NAMA LENGKAP</th>
+                            <th class="text-center">ROLE</th>
+                            <th style="width: 150px;" class="text-center">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if (count($rows_users) > 0):
+                            $no = 1;
+                            foreach ($rows_users as $row):
+                                $nama_tampil = $row['nama_lengkap'] ?? $row['nama'] ?? '-';
+                                $role_tampil = $row['role'] ?? 'ADMIN';
+                        ?>
+                        <tr>
+                            <td class="text-center"><?php echo $no++; ?></td>
+                            <td><strong><?php echo htmlspecialchars($row['username'] ?? ''); ?></strong></td>
+                            <td><?php echo htmlspecialchars($nama_tampil); ?></td>
+                            <td class="text-center"><span class="badge-role"><?php echo htmlspecialchars(strtoupper($role_tampil)); ?></span></td>
+                            <td class="text-center">
+                                <a href="users.php?edit=<?php echo $row['id']; ?>" class="btn btn-edit">✏️ Edit</a>
+                                <a href="users.php?hapus=<?php echo $row['id']; ?>" class="btn btn-hapus" onclick="return confirm('Yakin ingin menghapus user ini?');">🗑️ Hapus</a>
+                            </td>
+                        </tr>
+                        <?php 
+                            endforeach;
+                        else:
+                        ?>
+                        <tr>
+                            <td colspan="5" class="text-center" style="padding: 20px; color: #64748b;">Belum ada data user.</td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tampilan Mobile (Card Layout agar sangat rapi di HP) -->
+            <div class="mobile-cards">
+                <?php 
+                if (count($rows_users) > 0):
+                    $no = 1;
+                    foreach ($rows_users as $row):
+                        $nama_tampil = $row['nama_lengkap'] ?? $row['nama'] ?? '-';
+                        $role_tampil = $row['role'] ?? 'ADMIN';
+                ?>
+                <div class="user-card-item">
+                    <div class="user-card-header">
+                        <strong>#<?php echo $no++; ?> - <?php echo htmlspecialchars($row['username']); ?></strong>
+                        <span class="badge-role"><?php echo htmlspecialchars(strtoupper($role_tampil)); ?></span>
+                    </div>
+                    <div class="user-card-body">
+                        <div><strong>Nama Lengkap:</strong> <?php echo htmlspecialchars($nama_tampil); ?></div>
+                    </div>
+                    <div class="user-card-footer">
+                        <a href="users.php?edit=<?php echo $row['id']; ?>" class="btn btn-edit">✏️ Edit</a>
+                        <a href="users.php?hapus=<?php echo $row['id']; ?>" class="btn btn-hapus" onclick="return confirm('Yakin ingin menghapus user ini?');">🗑️ Hapus</a>
+                    </div>
+                </div>
+                <?php 
+                    endforeach;
+                else:
+                ?>
+                <div class="text-center" style="padding: 20px; color: #64748b; background: #f8fafc; border-radius: 8px;">Belum ada data user.</div>
+                <?php endif; ?>
+            </div>
+
         </div>
     </main>
 </div>

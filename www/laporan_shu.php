@@ -109,7 +109,6 @@ if (isset($_POST['simpan_hitung_shu'])) {
                 $cek_exist = $stmt_cek->fetch();
                 
                 if (!$cek_exist) {
-                    // Sesuai Gambar 1: Status awal Belum Dibayar, belum masuk kas/pengeluaran
                     $stmt_ins = $koneksi->prepare("INSERT INTO shu_pembayaran (id_anggota, periode, jma, jua, total_shu, jumlah_dibayar, status, tanggal_dibayar) VALUES (?, ?, ?, ?, ?, 0, 'Belum Dibayar', NULL)");
                     $stmt_ins->execute([$id_agt, $target_periode, $jma_calc, $jua_calc, $total_calc]);
                 } else if ($cek_exist['status'] !== 'Lunas Terbayar') {
@@ -132,7 +131,6 @@ if (isset($_POST['simpan_hitung_shu'])) {
             $cek_exist = $stmt_cek->fetch();
             
             if (!$cek_exist) {
-                // Sesuai Gambar 1: Status awal Belum Dibayar
                 $stmt_ins = $koneksi->prepare("INSERT INTO shu_pembayaran (id_anggota, periode, jma, jua, total_shu, jumlah_dibayar, status, tanggal_dibayar) VALUES (?, ?, ?, ?, ?, 0, 'Belum Dibayar', NULL)");
                 $stmt_ins->execute([$id_anggota_shu, $target_periode, $manual_jma, $manual_jua, $manual_total_shu]);
             } else if ($cek_exist['status'] !== 'Lunas Terbayar') {
@@ -164,11 +162,9 @@ if (isset($_POST['bayarkan_shu_aksi'])) {
         $nominal_bayar = floatval($dt_row['total_shu']);
         $nama_agt = $master_anggota[$id_agt]['nama'] ?? 'Anggota';
 
-        // Sesuai Gambar 1 & 2: Update status menjadi Lunas, catat tanggal, dan masukkan ke pengeluaran kas (Pembayaran SHU Anggota)
         $stmt_upd = $koneksi->prepare("UPDATE shu_pembayaran SET jumlah_dibayar = ?, status = 'Lunas Terbayar', tanggal_dibayar = ? WHERE id_anggota = ? AND periode = ?");
         $stmt_upd->execute([$nominal_bayar, $tgl_sekarang, $id_agt, $target_periode]);
 
-        // Masukkan ke tabel pengeluaran kas
         $koneksi->exec("CREATE TABLE IF NOT EXISTS pengeluaran (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tanggal TEXT,
@@ -200,7 +196,6 @@ if (isset($_POST['batal_bayar_shu'])) {
             $nama_agt = $master_anggota[$id_anggota_shu]['nama'] ?? '';
             $ket_keluar = "Pembayaran SHU Anggota (" . $target_periode . "): " . $nama_agt;
             
-            // Hapus pencatatan terkait dari tabel pengeluaran kas
             $stmt_del_peng = $koneksi->prepare("DELETE FROM pengeluaran WHERE keterangan = ?");
             $stmt_del_peng->execute([$ket_keluar]);
         }
@@ -214,14 +209,12 @@ if (isset($_POST['batal_bayar_shu'])) {
     exit();
 }
 
-// Ambil daftar periode unik murni berdasarkan data yang benar-benar tersimpan di database
 $list_periode = [];
 $q_per = $koneksi->query("SELECT DISTINCT periode FROM shu_pembayaran WHERE periode IS NOT NULL AND periode != ''");
 if ($q_per) {
     while ($row_p = $q_per->fetch()) {
         $p_val = $row_p['periode'];
         
-        // Validasi pastikan periode tersebut benar-benar memiliki data anggota
         $q_cek_data = $koneksi->prepare("SELECT COUNT(*) as jml FROM shu_pembayaran WHERE periode = ?");
         $q_cek_data->execute([$p_val]);
         $res_cek = $q_cek_data->fetch();
@@ -235,7 +228,6 @@ if ($q_per) {
 }
 rsort($list_periode);
 
-// Ambil data riwayat SHU tersimpan
 $data_riwayat_shu = [];
 $q_pay_all = $koneksi->query("SELECT * FROM shu_pembayaran ORDER BY id DESC");
 while ($r_pay = $q_pay_all->fetch()) {
@@ -261,7 +253,6 @@ while ($r_pay = $q_pay_all->fetch()) {
     }
 }
 
-// HITUNG NILAI RINGKASAN ATAS BERDASARKAN PERIODE CETAK
 $sum_total_shu_diterima = 0;
 foreach ($data_riwayat_shu as $row) {
     if ($cetak_periode === 'semua' || $row['periode'] === $cetak_periode) {
@@ -281,9 +272,6 @@ if ($cetak_periode !== 'semua' && $sum_total_shu_diterima > 0) {
     $alokasi_jua_cetak       = $alokasi_jua;
 }
 
-// ==========================================
-// SETUP PAGINATION (10 DATA PER HALAMAN)
-// ==========================================
 $limit = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 if ($page < 1) $page = 1;
@@ -318,8 +306,8 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         h2.page-title {
             color: #ffffff;
@@ -374,6 +362,7 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             font-size: 14px;
             width: 240px;
             outline: none;
+            background: #fff;
         }
 
         .btn {
@@ -387,15 +376,16 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
         }
         .btn-primary { background: #0288d1; color: white; }
         .btn-primary:hover { background: #01579b; }
         .btn-print { background: #00796b; color: white; }
         .btn-print:hover { background: #004d40; }
-        .btn-bayarkan { background: #2e7d32; color: white; padding: 5px 10px; font-size: 11px; }
+        .btn-bayarkan { background: #2e7d32; color: white; padding: 6px 12px; font-size: 11px; }
         .btn-bayarkan:hover { background: #1b5e20; }
-        .btn-cetak-kwitansi { background: #0288d1; color: white; padding: 5px 10px; font-size: 11px; }
+        .btn-cetak-kwitansi { background: #0288d1; color: white; padding: 6px 12px; font-size: 11px; }
         .btn-cetak-kwitansi:hover { background: #01579b; }
 
         .summary-info {
@@ -412,15 +402,22 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
         .s-box h4 { font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; }
         .s-box p { font-size: 16px; font-weight: bold; color: #0f172a; }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
             margin-bottom: 15px;
-            font-size: 11px;
+            font-size: 12px;
+            white-space: nowrap;
         }
-        th, td { padding: 8px 8px; text-align: left; border: 1px solid #cbd5e1; }
-        th { background-color: #f1f5f9; color: #1e293b; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 10px; }
+        th, td { padding: 10px 10px; text-align: left; border: 1px solid #cbd5e1; vertical-align: middle; }
+        th { background-color: #f1f5f9; color: #1e293b; font-weight: 700; text-align: center; text-transform: uppercase; font-size: 11px; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; display: inline-block; }
@@ -433,10 +430,13 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             margin-bottom: 25px;
             font-size: 13px;
             color: #475569;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .pagination {
             display: flex;
             gap: 5px;
+            flex-wrap: wrap;
         }
         .pagination a, .pagination span {
             padding: 6px 12px;
@@ -467,12 +467,14 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            padding: 15px;
         }
         .modal-box {
             background: #ffffff;
             padding: 25px;
             border-radius: 12px;
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
         .modal-box h3 { margin-bottom: 15px; font-size: 16px; color: #1e293b; }
@@ -484,11 +486,53 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             font-size: 14px;
             margin-bottom: 20px;
             outline: none;
+            background: #fff;
         }
         .modal-buttons {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        /* RESPONSIF UNTUK MOBILE / LAYAR KECIL */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .app-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 15px 12px;
+            }
+            .content {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            .top-section-layout {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+            .form-row label {
+                width: 100%;
+            }
+            .form-row input, .form-row select {
+                width: 100%;
+            }
+            .form-card div[style*="display: flex"] {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+            .pagination-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media print {
@@ -507,7 +551,8 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
             tr.row-periode-<?php echo md5($cetak_periode); ?> { display: table-row !important; }
             <?php endif; ?>
 
-            table { font-size: 10px !important; }
+            .table-responsive { overflow: visible !important; }
+            table { font-size: 10px !important; white-space: normal !important; }
             th, td { border: 1px solid #000 !important; padding: 4px 5px !important; }
             th { background-color: #f2f2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .no-print-col { display: none !important; }
@@ -644,137 +689,137 @@ $paginated_data = array_slice($data_riwayat_shu, $start_index, $limit);
                         <input type="number" step="any" name="jumlah_shu_bayar" id="inputTotalHitung" readonly required style="background: #f1f5f9; font-weight: bold; color: #1e293b;">
                     </div>
                     
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                         <button type="submit" class="btn btn-primary" onclick="submitDuaForm(event)">💾 Simpan / Hitung Data SHU</button>
                         <button type="button" onclick="bukaModalCetak()" class="btn btn-print">🖨️ Cetak Laporan SHU</button>
                     </div>
                 </form>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 30px;">No</th>
-                        <th>Nama Anggota</th>
-                        <th>Periode</th>
-                        <th>Simpanan Anggota</th>
-                        <th>JMA (Jasa Modal)</th>
-                        <th>Volume Transaksi</th>
-                        <th>JUA (Jasa Usaha)</th>
-                        <th>Total SHU Diterima</th>
-                        <th>Jumlah Dibayar</th>
-                        <th>Tgl Pembayaran</th>
-                        <th>Status Pembayaran</th>
-                        <th class="no-print-col" style="width: 140px;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $no = $start_index + 1;
-                    $tot_shu_all = 0; 
-                    $tot_dibayar_all = 0; 
-                    $tot_simp_all = 0;
-                    $tot_jma_all = 0;
-                    $tot_trans_all = 0;
-                    $tot_jua_all = 0;
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">No</th>
+                            <th>Nama Anggota</th>
+                            <th>Periode</th>
+                            <th>Simpanan Anggota</th>
+                            <th>JMA (Jasa Modal)</th>
+                            <th>Volume Transaksi</th>
+                            <th>JUA (Jasa Usaha)</th>
+                            <th>Total SHU Diterima</th>
+                            <th>Jumlah Dibayar</th>
+                            <th>Tgl Pembayaran</th>
+                            <th>Status Pembayaran</th>
+                            <th class="no-print-col" style="width: 140px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $no = $start_index + 1;
+                        $tot_shu_all = 0; 
+                        $tot_dibayar_all = 0; 
+                        $tot_simp_all = 0;
+                        $tot_jma_all = 0;
+                        $tot_trans_all = 0;
+                        $tot_jua_all = 0;
 
-                    foreach ($data_riwayat_shu as $row) {
-                        if ($cetak_periode === 'semua' || $row['periode'] === $cetak_periode) {
-                            $tot_simp_all += $row['simpanan'];
-                            $tot_jma_all += $row['jma'];
-                            $tot_trans_all += $row['transaksi'];
-                            $tot_jua_all += $row['jua'];
-                            $tot_shu_all += $row['total_shu'];
-                            if ($row['status_db'] === 'Lunas Terbayar') {
-                                $tot_dibayar_all += $row['sudah_dibayar'];
+                        foreach ($data_riwayat_shu as $row) {
+                            if ($cetak_periode === 'semua' || $row['periode'] === $cetak_periode) {
+                                $tot_simp_all += $row['simpanan'];
+                                $tot_jma_all += $row['jma'];
+                                $tot_trans_all += $row['transaksi'];
+                                $tot_jua_all += $row['jua'];
+                                $tot_shu_all += $row['total_shu'];
+                                if ($row['status_db'] === 'Lunas Terbayar') {
+                                    $tot_dibayar_all += $row['sudah_dibayar'];
+                                }
                             }
                         }
-                    }
 
-                    if (empty($paginated_data)) {
-                        echo '<tr><td colspan="12" class="text-center" style="padding: 20px; color: #64748b; font-style: italic;">Belum ada riwayat SHU yang di-update atau dihitung. Silakan lakukan penyimpanan data melalui panel hitung di atas.</td></tr>';
-                    } else {
-                        foreach ($paginated_data as $row) {
-                            $total_shu_terima = $row['total_shu'];
-                            $is_lunas = ($row['status_db'] === 'Lunas Terbayar');
-                            
-                            $sudah_dibayar_nominal = $is_lunas ? $row['sudah_dibayar'] : 0;
-                            $tgl_tampil = ($is_lunas && !empty($row['tgl_pembayaran'])) ? date('d/m/Y H:i', strtotime($row['tgl_pembayaran'])) : '-';
-                            $class_periode = 'row-data row-periode-' . md5($row['periode']);
-                    ?>
-                    <tr class="<?php echo $class_periode; ?>">
-                        <td class="text-center"><?php echo $no++; ?></td>
-                        <td><strong><?php echo htmlspecialchars($row['nama']); ?></strong></td>
-                        <td class="text-center"><?php echo htmlspecialchars($row['periode']); ?></td>
-                        <td class="text-right">Rp <?php echo number_format($row['simpanan'], 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($row['jma'], 0, ',', '.'); ?></td>
-                        <td class="text-right">Rp <?php echo number_format($row['transaksi'], 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($row['jua'], 0, ',', '.'); ?></td>
-                        <td class="text-right" style="font-weight: bold; color: #00796b;">
-                            Rp <?php echo number_format($total_shu_terima, 0, ',', '.'); ?>
-                        </td>
-                        <td class="text-right" style="font-weight: bold; color: #155724;">
-                            <?php if ($is_lunas): ?>
-                                Rp <?php echo number_format($sudah_dibayar_nominal, 0, ',', '.'); ?>
-                            <?php else: ?>
-                                -
-                            <?php endif; ?>
-                        </td>
-                        <td class="text-center"><?php echo $tgl_tampil; ?></td>
-                        <td class="text-center">
-                            <?php if ($is_lunas): ?>
-                                <span class="badge" style="background-color: #d4edda; color: #155724;">Lunas</span>
-                            <?php else: ?>
-                                <span class="badge" style="background-color: #fef3c7; color: #b45309;">Belum Dibayar</span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="text-center no-print-col">
-                            <div style="display: flex; gap: 4px; justify-content: center; align-items: center;">
-                                <?php if (!$is_lunas): ?>
-                                    <!-- Kolom Aksi Sesuai Gambar 1: Tombol Bayarkan dan tombol hapus silang merah -->
-                                    <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
-                                        <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
-                                        <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
-                                        <button type="submit" name="bayarkan_shu_aksi" class="btn btn-bayarkan" title="Bayarkan SHU">Bayarkan</button>
-                                    </form>
-                                    <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
-                                        <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
-                                        <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
-                                        <input type="submit" name="batal_bayar_shu" value="❌" title="Hapus Data" style="padding: 5px 8px; background: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">
-                                    </form>
+                        if (empty($paginated_data)) {
+                            echo '<tr><td colspan="12" class="text-center" style="padding: 20px; color: #64748b; font-style: italic;">Belum ada riwayat SHU yang di-update atau dihitung. Silakan lakukan penyimpanan data melalui panel hitung di atas.</td></tr>';
+                        } else {
+                            foreach ($paginated_data as $row) {
+                                $total_shu_terima = $row['total_shu'];
+                                $is_lunas = ($row['status_db'] === 'Lunas Terbayar');
+                                
+                                $sudah_dibayar_nominal = $is_lunas ? $row['sudah_dibayar'] : 0;
+                                $tgl_tampil = ($is_lunas && !empty($row['tgl_pembayaran'])) ? date('d/m/Y H:i', strtotime($row['tgl_pembayaran'])) : '-';
+                                $class_periode = 'row-data row-periode-' . md5($row['periode']);
+                        ?>
+                        <tr class="<?php echo $class_periode; ?>">
+                            <td class="text-center"><?php echo $no++; ?></td>
+                            <td><strong><?php echo htmlspecialchars($row['nama']); ?></strong></td>
+                            <td class="text-center"><?php echo htmlspecialchars($row['periode']); ?></td>
+                            <td class="text-right">Rp <?php echo number_format($row['simpanan'], 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($row['jma'], 0, ',', '.'); ?></td>
+                            <td class="text-right">Rp <?php echo number_format($row['transaksi'], 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($row['jua'], 0, ',', '.'); ?></td>
+                            <td class="text-right" style="font-weight: bold; color: #00796b;">
+                                Rp <?php echo number_format($total_shu_terima, 0, ',', '.'); ?>
+                            </td>
+                            <td class="text-right" style="font-weight: bold; color: #155724;">
+                                <?php if ($is_lunas): ?>
+                                    Rp <?php echo number_format($sudah_dibayar_nominal, 0, ',', '.'); ?>
                                 <?php else: ?>
-                                    <!-- Kolom Aksi Sesuai Gambar 1: Tombol cetak kwitansi biru & tombol batal/hapus silang merah -->
-                                    <a href="cetak_bukti_shu.php?id=<?php echo $row['id_anggota']; ?>&tgl=<?php echo urlencode($row['tgl_pembayaran']); ?>" target="_blank" class="btn btn-cetak-kwitansi" title="Cetak Bukti Kwitansi">🖨️</a>
-                                    <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
-                                        <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
-                                        <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
-                                        <input type="submit" name="batal_bayar_shu" value="❌" title="Batalkan & Hapus" style="padding: 5px 8px; background: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">
-                                    </form>
+                                    -
                                 <?php endif; ?>
-                            </div>
-                        </td>                
-                    </tr>
-                    <?php 
-                        }
-                    } 
-                    ?>
-                </tbody>
-                <?php if (!empty($data_riwayat_shu)): ?>
-                <tfoot>
-                    <tr style="background-color: #f1f5f9; font-weight: bold;">
-                        <td colspan="3" class="text-center">TOTAL KESELURUHAN</td>
-                        <td class="text-right">Rp <?php echo number_format($tot_simp_all, 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_jma_all, 0, ',', '.'); ?></td>
-                        <td class="text-right">Rp <?php echo number_format($tot_trans_all, 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_jua_all, 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_shu_all, 0, ',', '.'); ?></td>
-                        <td class="text-right" style="color: #155724;">Rp <?php echo number_format($tot_dibayar_all, 0, ',', '.'); ?></td>
-                        <td colspan="2" class="text-center"></td>
-                        <td class="no-print-col"></td>
-                    </tr>
-                </tfoot>
-                <?php endif; ?>
-            </table>
+                            </td>
+                            <td class="text-center"><?php echo $tgl_tampil; ?></td>
+                            <td class="text-center">
+                                <?php if ($is_lunas): ?>
+                                    <span class="badge" style="background-color: #d4edda; color: #155724;">Lunas</span>
+                                <?php else: ?>
+                                    <span class="badge" style="background-color: #fef3c7; color: #b45309;">Belum Dibayar</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-center no-print-col">
+                                <div style="display: flex; gap: 4px; justify-content: center; align-items: center;">
+                                    <?php if (!$is_lunas): ?>
+                                        <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
+                                            <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
+                                            <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
+                                            <button type="submit" name="bayarkan_shu_aksi" class="btn btn-bayarkan" title="Bayarkan SHU">Bayarkan</button>
+                                        </form>
+                                        <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
+                                            <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
+                                            <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
+                                            <input type="submit" name="batal_bayar_shu" value="❌" title="Hapus Data" style="padding: 6px 10px; background: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">
+                                        </form>
+                                    <?php else: ?>
+                                        <a href="cetak_bukti_shu.php?id=<?php echo $row['id_anggota']; ?>&tgl=<?php echo urlencode($row['tgl_pembayaran']); ?>" target="_blank" class="btn btn-cetak-kwitansi" title="Cetak Bukti Kwitansi">🖨️</a>
+                                        <form method="POST" action="laporan_shu.php?tgl_awal=<?php echo $tgl_awal; ?>&tgl_akhir=<?php echo $tgl_akhir; ?>" style="margin: 0;">
+                                            <input type="hidden" name="id_anggota_shu" value="<?php echo $row['id_anggota']; ?>">
+                                            <input type="hidden" name="periode_target" value="<?php echo htmlspecialchars($row['periode']); ?>">
+                                            <input type="submit" name="batal_bayar_shu" value="❌" title="Batalkan & Hapus" style="padding: 6px 10px; background: #dc2626; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
+                            </td>                
+                        </tr>
+                        <?php 
+                            }
+                        } 
+                        ?>
+                    </tbody>
+                    <?php if (!empty($data_riwayat_shu)): ?>
+                    <tfoot>
+                        <tr style="background-color: #f1f5f9; font-weight: bold;">
+                            <td colspan="3" class="text-center">TOTAL KESELURUHAN</td>
+                            <td class="text-right">Rp <?php echo number_format($tot_simp_all, 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_jma_all, 0, ',', '.'); ?></td>
+                            <td class="text-right">Rp <?php echo number_format($tot_trans_all, 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_jua_all, 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #00796b;">Rp <?php echo number_format($tot_shu_all, 0, ',', '.'); ?></td>
+                            <td class="text-right" style="color: #155724;">Rp <?php echo number_format($tot_dibayar_all, 0, ',', '.'); ?></td>
+                            <td colspan="2" class="text-center"></td>
+                            <td class="no-print-col"></td>
+                        </tr>
+                    </tfoot>
+                    <?php endif; ?>
+                </table>
+            </div>
 
             <?php if ($total_pages > 1): ?>
             <div class="pagination-container no-print-col">

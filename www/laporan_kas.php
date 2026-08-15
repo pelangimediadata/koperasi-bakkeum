@@ -183,8 +183,8 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         .dashboard-header-flex {
             display: flex;
@@ -197,6 +197,7 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            gap: 15px;
         }
 
         .dashboard-title-box h2 {
@@ -226,6 +227,7 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             align-items: center;
             gap: 8px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
         }
 
         .top-section-header {
@@ -278,6 +280,7 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             font-size: 13px;
             transition: all 0.2s ease;
@@ -341,6 +344,7 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
         .table-responsive {
             width: 100%;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -349,6 +353,7 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             margin-top: 10px;
             text-align: left;
             font-size: 14px;
+            white-space: nowrap;
         }
 
         th {
@@ -369,39 +374,81 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
             background-color: #f0fdf4;
         }
 
+        /* RESPONSIF UNTUK MOBILE / LAYAR KECIL */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .app-container {
+                flex-direction: column;
+            }
+
+            .main-content {
+                padding: 15px 12px;
+            }
+
+            .dashboard-header-flex {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+                gap: 12px;
+            }
+
+            .header-live-clock {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .top-section-header {
+                padding: 15px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .top-section-header > div:last-child {
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+
+            .filter-form-group {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-form-group select {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .summary-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-box {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+        }
+
         @media print {
             body { background: white; }
             .app-container { display: block; }
             .dashboard-header-flex, sidebar, .btn, form { display: none !important; }
             .card-box, .top-section-header, .summary-card { box-shadow: none; border: 1px solid #ddd; background: white; }
         }
-		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
-
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
     </style>
 </head>
 <body>

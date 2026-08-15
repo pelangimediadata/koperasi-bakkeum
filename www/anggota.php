@@ -50,8 +50,8 @@ $role_user = $_SESSION['role'] ?? 'admin';
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         /* HEADER / TOP BAR DINAMIS */
         .dashboard-header-flex {
@@ -65,6 +65,8 @@ $role_user = $_SESSION['role'] ?? 'admin';
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .dashboard-title-box h2 {
@@ -94,6 +96,7 @@ $role_user = $_SESSION['role'] ?? 'admin';
             align-items: center;
             gap: 8px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
         }
 
         .content { 
@@ -110,6 +113,8 @@ $role_user = $_SESSION['role'] ?? 'admin';
             margin-bottom: 20px; 
             border-bottom: 2px solid #00796b; 
             padding-bottom: 15px; 
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .page-title { 
@@ -128,7 +133,9 @@ $role_user = $_SESSION['role'] ?? 'admin';
             font-weight: bold; 
             cursor: pointer; 
             text-decoration: none; 
-            display: inline-block; 
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
             font-size: 13px; 
             transition: all 0.2s ease; 
         }
@@ -137,48 +144,66 @@ $role_user = $_SESSION['role'] ?? 'admin';
             transform: translateY(-1px); 
         }
         .btn-primary { background-color: #00796b; color: white; box-shadow: 0 4px 10px rgba(0, 121, 107, 0.3); }
-        .btn-warning { background-color: #ed6c02; color: white; }
-        .btn-danger { background-color: #d32f2f; color: white; }
+        .btn-warning { background-color: #ed6c02; color: white; padding: 6px 10px; font-size: 12px; }
+        .btn-danger { background-color: #d32f2f; color: white; padding: 6px 10px; font-size: 12px; }
         .btn-secondary { background-color: #64748b; color: white; }
 
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px; }
+        .table-responsive { 
+            width: 100%; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px; white-space: nowrap; }
         th { background-color: #00796b; color: #ffffff; padding: 12px 15px; font-weight: 600; }
         td { padding: 12px 15px; border-bottom: 1px solid #e0e0e0; color: #333333; vertical-align: middle; }
         tbody tr:hover { background-color: #f0fdf4; }
 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; }
-        .modal-content { background-color: #fff; padding: 25px; border-radius: 12px; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background-color: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
         .modal-header { font-size: 18px; font-weight: bold; color: #d32f2f; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .modal-body { font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.5; }
         .modal-footer { display: flex; justify-content: center; gap: 10px; }
-		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
 
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
+        /* RESPONSIF UNTUK MOBILE / LAYAR KECIL */
+        @media screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .app-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 15px 12px;
+            }
+            .content {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            .dashboard-header-flex {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+            .header-live-clock {
+                justify-content: center;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .page-header div a {
+                display: block;
+                text-align: center;
+                width: 100%;
+            }
+            .modal-footer {
+                flex-direction: column;
+            }
+            .modal-footer .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>

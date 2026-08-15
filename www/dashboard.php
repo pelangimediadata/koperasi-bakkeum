@@ -185,6 +185,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             animation: gradientBG 18s ease infinite;
             color: #333;
             display: flex;
+            flex-direction: row;
         }
 
         @keyframes gradientBG {
@@ -193,8 +194,8 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             100% { background-position: 0% 50%; }
         }
 
-        .app-container { display: flex; min-height: 100vh; width: 100%; }
-        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; }
+        .app-container { display: flex; min-height: 100vh; width: 100%; flex-direction: row; }
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; background: transparent; width: 100%; }
 
         /* HEADER / TOP BAR DINAMIS */
         .dashboard-header-flex {
@@ -208,6 +209,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            gap: 15px;
         }
 
         .dashboard-title-box h2 {
@@ -237,6 +239,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             align-items: center;
             gap: 8px;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
         }
 
         .content { 
@@ -258,6 +261,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             box-shadow: 0 6px 20px rgba(0, 121, 107, 0.35);
             position: relative;
             overflow: hidden;
+            gap: 15px;
         }
 
         .welcome-banner::after {
@@ -297,6 +301,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             align-items: center;
             gap: 12px;
             border: 1px solid rgba(255, 255, 255, 0.25);
+            white-space: nowrap;
         }
 
         .logout-btn {
@@ -352,6 +357,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             font-weight: 800; 
             color: #333; 
             margin: 0; 
+            word-break: break-word;
         }
 
         .card .sub-value { 
@@ -391,7 +397,7 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
             display: inline-block; 
             font-size: 13px; 
             margin-right: 8px; 
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: white; 
             transition: all 0.2s ease;
         }
@@ -417,37 +423,62 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
-        .modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 12px; width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 15px; overflow-y: auto; }
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 25px; border-radius: 12px; width: 100%; max-width: 420px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
         .modal-header { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .close-modal { background: #6c757d; color: white; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; float: right; margin-top: 10px; font-weight: bold; }
-		/* Pengaturan Responsif untuk Handphone / Layar Kecil */
-@media screen and (max-width: 768px) {
-    /* Sidebar dibuat otomatis menyesuaikan atau bisa disembunyikan/diperkecil */
-    .sidebar, nav.sidebar {
-        width: 70px !important;
-        min-width: 70px !important;
-        overflow: hidden;
-    }
 
-    /* Sembunyikan teks menu, biarkan ikonnya saja jika di HP */
-    .sidebar span, .sidebar .menu-text {
-        display: none !important;
-    }
-
-    /* Konten utama mengambil sisa lebar layar penuh */
-    .main-content, .content, .container {
-        margin-left: 70px !important;
-        width: calc(100% - 70px) !important;
-        padding: 10px !important;
-    }
-
-    /* Sesuaikan ukuran kartu atau kotak agar tidak terpotong */
-    .card, .box {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-}
+        /* Media Queries untuk Perbaikan Tampilan Mobile */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .app-container {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .dashboard-header-flex {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .header-live-clock {
+                width: 100%;
+                justify-content: center;
+            }
+            .content {
+                padding: 15px;
+                border-radius: 12px;
+            }
+            .welcome-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 18px;
+            }
+            .welcome-badge {
+                width: 100%;
+                justify-content: center;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .admin-db-menu {
+                padding: 12px;
+            }
+            .btn-db {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 8px;
+                text-align: center;
+            }
+            .modal-content {
+                margin: 20% auto;
+                padding: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -569,25 +600,28 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
     <div class="modal-content">
         <div class="modal-header">🔄 Restore Database Koperasi</div>
         <form action="dashboard.php?db_action=restore" method="POST" enctype="multipart/form-data">
-            <p style="font-size: 13px; color: #666;">Pilih file cadangan database (format <strong>.db</strong>):</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Pilih file cadangan database (format <strong>.db</strong>):</p>
             <input type="file" name="backup_file" accept=".db" required style="margin-bottom: 15px; width: 100%;">
-            <button type="submit" class="btn-db btn-restore">Mulai Restore</button>
-            <button type="button" onclick="closeModal('restoreModal')" class="close-modal">Batal</button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="submit" class="btn-db btn-restore" style="flex: 1; margin: 0;">Mulai Restore</button>
+                <button type="button" onclick="closeModal('restoreModal')" class="close-modal" style="flex: 1; margin: 0; float: none;">Batal</button>
+            </div>
         </form>
     </div>
-</div>>
+</div>
 
 <!-- MODAL POPUP RESET DATABASE -->
 <div id="resetModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" style="color: #d32f2f;">⚠️ Konfirmasi Reset Database</div>
         <form action="dashboard.php?db_action=reset" method="POST">
-            <p style="font-size: 13px; color: #d32f2f; font-weight: bold;">PERINGATAN: Tindakan ini akan MENGHAPUS SELURUH DATA transaksi, anggota, simpanan, dan pinjaman!</p>
-            <p style="font-size: 13px; color: #666;">Ketik kata <strong>RESET</strong> untuk mengonfirmasi:</p>
-            <input type="text" name="confirm_reset" required autocomplete="off" placeholder="Ketik RESET disini" style="padding: 8px; width: 93%; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
-            <br>
-            <button type="submit" class="btn-db btn-reset">Kosongkan Database</button>
-            <button type="button" onclick="closeModal('resetModal')" class="close-modal">Batal</button>
+            <p style="font-size: 13px; color: #d32f2f; font-weight: bold; margin-bottom: 8px;">PERINGATAN: Tindakan ini akan MENGHAPUS SELURUH DATA transaksi, anggota, simpanan, dan pinjaman!</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Ketik kata <strong>RESET</strong> untuk mengonfirmasi:</p>
+            <input type="text" name="confirm_reset" required autocomplete="off" placeholder="Ketik RESET disini" style="padding: 10px; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="submit" class="btn-db btn-reset" style="flex: 1; margin: 0;">Kosongkan Database</button>
+                <button type="button" onclick="closeModal('resetModal')" class="close-modal" style="flex: 1; margin: 0; float: none;">Batal</button>
+            </div>
         </form>
     </div>
 </div>
@@ -597,12 +631,13 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
     <div class="modal-content">
         <div class="modal-header" style="color: #c2185b;">🗑️ Konfirmasi Reset Transaksi</div>
         <form action="dashboard.php?db_action=reset_transaksi" method="POST">
-            <p style="font-size: 13px; color: #c2185b; font-weight: bold;">PERINGATAN: Tindakan ini akan MENGHAPUS SELURUH DATA TRANSAKSI (simpanan, pinjaman, pembayaran, belanja modal barang, kas, toko, dan SHU) tanpa menghapus data anggota!</p>
-            <p style="font-size: 13px; color: #666;">Ketik kata <strong>TRANSAKSI</strong> untuk mengonfirmasi:</p>
-            <input type="text" name="confirm_reset_trx" required autocomplete="off" placeholder="Ketik TRANSAKSI disini" style="padding: 8px; width: 93%; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
-            <br>
-            <button type="submit" class="btn-db btn-reset-trx">Reset Semua Transaksi</button>
-            <button type="button" onclick="closeModal('resetTrxModal')" class="close-modal">Batal</button>
+            <p style="font-size: 13px; color: #c2185b; font-weight: bold; margin-bottom: 8px;">PERINGATAN: Tindakan ini akan MENGHAPUS SELURUH DATA TRANSAKSI tanpa menghapus data anggota!</p>
+            <p style="font-size: 13px; color: #666; margin-bottom: 8px;">Ketik kata <strong>TRANSAKSI</strong> untuk mengonfirmasi:</p>
+            <input type="text" name="confirm_reset_trx" required autocomplete="off" placeholder="Ketik TRANSAKSI disini" style="padding: 10px; width: 100%; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="submit" class="btn-db btn-reset-trx" style="flex: 1; margin: 0;">Reset Semua Transaksi</button>
+                <button type="button" onclick="closeModal('resetTrxModal')" class="close-modal" style="flex: 1; margin: 0; float: none;">Batal</button>
+            </div>
         </form>
     </div>
 </div>
