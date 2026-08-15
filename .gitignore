@@ -1,0 +1,4 @@
+libcef.dll
+*.exe
+node_modules/"libcef.dll" 
+"*.exe" 
