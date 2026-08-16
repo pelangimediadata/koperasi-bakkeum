@@ -114,7 +114,7 @@ $stmt_stok->execute([
             body { padding: 0; }
             .filter-tanggal { display: none; }
         }
-    </style>
+	    </style>
 </head>
 <body>
 
@@ -190,8 +190,7 @@ $stmt_stok->execute([
     </div>
 
     <div class="no-print" style="clear: both; text-align: center; margin-top: 40px;">
-        <button onclick="window.print()" style="padding: 8px 16px; font-size: 14px; cursor: pointer;">Cetak Ulang</button>
-        <a href="toko.php" style="display: inline-block; margin-left: 10px; padding: 8px 16px; font-size: 14px; text-decoration: none; background: #6c757d; color: #fff; border-radius: 4px;">Kembali ke Toko</a>
+        <button onclick="window.close()" class="btn btn-keluar">❌ Keluar</button>
     </div>
 
 </body>

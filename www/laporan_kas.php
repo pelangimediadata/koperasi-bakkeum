@@ -147,9 +147,9 @@ $pembayaran_shu = getSumFilteredPHP($koneksi, 'shu_pembayaran', 'jumlah_dibayar'
     return in_array($status, ['lunas', 'lunas terbayar']);
 });
 
-// 8. PENGELUARAN OPERASIONAL 
+// 8. PENGELUARAN OPERASIONAL (Mengambil nilai dari Transaksi MASUK di halaman operasional.php)
 $pengeluaran_operasional = getSumFilteredPHP($koneksi, 'operasional', 'jumlah', ['tanggal', 'tgl', 'created_at'], function($row) {
-    return strtolower($row['jenis_transaksi'] ?? '') === 'masuk' || true; 
+    return strtolower($row['jenis_transaksi'] ?? '') === 'masuk'; 
 });
 
 // Total Kas Masuk & Keluar
@@ -588,8 +588,8 @@ $keuntungan_usaha = $hasil_omset_toko + $penerimaan_bunga;
                             <td style="text-align: right; color: #b91c1c; font-weight: 600;">(Rp <?php echo number_format($pembayaran_shu, 0, ',', '.'); ?>)</td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">8</td>
-                            <td>Pengeluaran Operasional (Belanja Modal, Pegawai, & Barang/Jasa)</td>
+                            <<td style="text-align: center;">8</td>
+                            <td>Pengeluaran Operasional (Belanja Modal, Pegawai, & Barang/Jasa) <br><i style="font-size: 11px; color: #666;">(Bersumber dari Transaksi Masuk halaman operasional.php)</i></td>
                             <td><b style="color: #b91c1c;">KAS KELUAR</b></td>
                             <td style="text-align: right; color: #b91c1c; font-weight: 600;">(Rp <?php echo number_format($pengeluaran_operasional, 0, ',', '.'); ?>)</td>
                         </tr>

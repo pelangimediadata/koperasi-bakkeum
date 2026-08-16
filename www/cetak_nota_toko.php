@@ -119,23 +119,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['proses_bayar'])) {
     <title>Nota Transaksi - Koperasi Bakkeum</title>
     <style>
         body { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: #000; background: #f4f6f9; margin: 20px; }
-        .nota-container { width: 320px; margin: 0 auto; padding: 15px; background: #fff; border: 1px dashed #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .nota-container { width: 320px; margin: 0 auto; padding: 20px; background: #fff; border: 1px dashed #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); box-sizing: border-box; }
         .center { text-align: center; }
         .right { text-align: right; }
-        .line { border-bottom: 1px dashed #333; margin: 10px 0; }
+        .line { border-bottom: 1px dashed #333; margin: 12px 0; }
         table { width: 100%; border-collapse: collapse; }
         table th, table td { padding: 4px 0; font-size: 12px; }
         
-        .action-panel { width: 350px; margin: 20px auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn { padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; font-size: 12px; color: white; width: 100%; }
+        .action-panel { width: 320px; margin: 20px auto; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); box-sizing: border-box; }
+        .btn { padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; font-size: 12px; color: white; width: 100%; display: block; text-decoration: none; box-sizing: border-box; }
         .btn-bayar { background: #28a745; margin-top: 8px; }
         .btn-print { background: #007bff; margin-top: 8px; }
+        .btn-keluar { background: #dc3545; margin-top: 8px; } /* Tombol Keluar berwarna merah */
         .alert { background: #d4edda; color: #155724; padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 11px; text-align: center; }
         .alert-error { background: #f8d7da; color: #721c24; padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 11px; text-align: center; border: 1px solid #f5c6cb; }
         @media print {
             .action-panel { display: none; }
             body { background: #fff; margin: 0; }
-            .nota-container { border: none; box-shadow: none; width: 100%; }
+            .nota-container { border: none; box-shadow: none; width: 100%; padding: 0; }
         }
     </style>
 </head>
@@ -159,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['proses_bayar'])) {
     
     <table>
         <tr>
-            <th>Item / Barang</th>
+            <th style="text-align: left;">Item / Barang</th>
             <th class="center">Qty</th>
             <th class="right">Subtotal</th>
         </tr>
@@ -210,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['proses_bayar'])) {
     </div>
 </div>
 
-<!-- PANEL PEMBAYARAN: HANYA KOLOM INPUT NOMINAL & TOMBOL BAYAR DI BAWAHNYA -->
+<!-- PANEL AKSI & PEMBAYARAN -->
 <div class="action-panel">
     <?php if (!empty($pesan_sukses)): ?>
         <div class="alert"><?php echo $pesan_sukses; ?></div>
@@ -223,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['proses_bayar'])) {
     <form method="POST" action="">
         <div style="background: #fdfdfe; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
             <label style="font-size: 11px; font-weight: bold; color: #555;">Masukkan Nominal Uang Pembayaran (Rp):</label>
-            <input type="number" name="nominal_bayar" value="<?php echo ($first_item['jumlah_bayar'] > 0) ? $first_item['jumlah_bayar'] : $grand_total; ?>" placeholder="0" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-weight: bold;" min="0" max="<?php echo $grand_total; ?>" required>
+            <input type="number" name="nominal_bayar" value="<?php echo ($first_item['jumlah_bayar'] > 0) ? $first_item['jumlah_bayar'] : $grand_total; ?>" placeholder="0" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-weight: bold; box-sizing: border-box;" min="0" max="<?php echo $grand_total; ?>" required>
             <div style="font-size: 10px; color: #666; margin-top: 4px; margin-bottom: 8px;">* Nominal tidak boleh melebihi total belanja (Maks: Rp <?php echo number_format($grand_total, 0, ',', '.'); ?>).</div>
             
             <button type="submit" name="proses_bayar" class="btn btn-bayar">💾 Bayar</button>
@@ -231,6 +232,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['proses_bayar'])) {
     </form>
 
     <button onclick="window.print()" class="btn btn-print">🖨️ Cetak / Print Nota</button>
+    
+    <!-- Tombol Keluar (Menutup halaman atau kembali ke toko jika tab tidak bisa ditutup) -->
+    <button onclick="window.close()" class="btn btn-keluar">❌ Keluar</button>
 </div>
 
 </body>
