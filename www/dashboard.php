@@ -149,7 +149,7 @@ try {
     $stmt_nom_b->execute([$bulan_ini]);
     $nom_bulan = $stmt_nom_b->fetch()['total'] ?? 0;
 
-    $tot_simpanan = $koneksi->query("SELECT IFNULL(SUM(jumlah_simpanan), 0) AS total FROM simpanan")->fetch()['total'] ?? 0;
+    $tot_simpanan = $koneksi->query("SELECT IFNULL(SUM(jumlah), 0) AS total FROM simpanan")->fetch()['total'] ?? 0;
     $tot_pokok = $koneksi->query("SELECT IFNULL(SUM(jumlah_pinjaman), 0) AS total FROM pinjaman WHERE status = 'Berjalan'")->fetch()['total'] ?? 0;
 
     $stmt_bg_b = $koneksi->prepare("SELECT IFNULL(SUM(CASE WHEN bayar_bunga > 0 THEN bayar_bunga WHEN jenis_bayar = 'Bayar Bunga' THEN jumlah_bayar ELSE 0 END), 0) AS total FROM pembayaran WHERE strftime('%Y-%m', tanggal) = ?");
@@ -490,8 +490,8 @@ $nama_user = $_SESSION['nama'] ?? 'Admin';
         <!-- BAGIAN ATAS DINAMIS & ATRAKTIF -->
         <div class="dashboard-header-flex">
             <div class="dashboard-title-box">
-                <h2>🏛️ KOPERASI BAKKEUM</h2>
-                <p>Sistem Informasi Manajemen Koperasi Bakkeum</p>
+                <h2>🏛️BALAD KAUR KEUANGAN MALINGPING(BAKKEUM)</h2>
+			     <p>Sistem Informasi Manajemen Koperasi Bakkeum</p>
             </div>
             <div class="header-live-clock" id="liveClock">
                 📅 <span><?php echo date('d M Y'); ?></span> | ⏰ <span id="timeText">--:--:--</span>
